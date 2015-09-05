@@ -3,6 +3,7 @@
 
     <item android:id="@+id/most_popular"
           android:title="@string/most_popular"
+          android:visible="true"
           app:showAsAction="never"/>
 
     <item android:id="@+id/highest_rated"
