@@ -3,9 +3,11 @@
     <string name="action_settings">Settings</string>
 
 
-    <string name="dbapiurl">http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&amp;api_key=</string>
-    <string name="api_key">1f1c322eac2002dd9de10a6581e6e034</string>
-    <!--<string name="image_url">http://image.tmdb.org/t/p/w185/</string>-->
+    <string name="dbapiurl">http://api.themoviedb.org/3/discover/movie?sort_by=</string>
+    <string name="dbapiurl_popularity">popularity.desc</string>
+    <string name="dbapiurl_rate">vote_average.desc</string>
+    <string name="dbapikey_param">&amp;api_key=</string>
+    <string name="dbapikey">PUT YOUR API KEY HERE!!!</string>
     <string name="exception">Upss!!! An exception was found</string>
 
     <!-- menu_dbmovie_fragment -->
