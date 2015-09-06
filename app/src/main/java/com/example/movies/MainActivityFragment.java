@@ -27,23 +27,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class MainActivityFragment extends Fragment {
 
-    private static final String TAG = MainActivityFragment.class.getSimpleName();
-    private ArrayList<MovieDataParcelable> mArrayList;
     private static final String MOVIE_KEY = "MOVIES";
     private static final String SORT_KEY = "SORT";
-    protected ImageAdapter mImageAdapter;
+    private ArrayList<MovieDataParcelable> mArrayList;
     private Menu sMenu;
     private SharedPreferences mPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mArrayList = new ArrayList<MovieDataParcelable>();
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         setHasOptionsMenu(true);
         if (savedInstanceState == null) {
@@ -61,7 +55,7 @@ public class MainActivityFragment extends Fragment {
         if (savedInstanceState != null)  {
             mArrayList = (ArrayList<MovieDataParcelable>) savedInstanceState.get(MOVIE_KEY);
             GridView gridview = (GridView) root.findViewById(R.id.gridView);
-            mImageAdapter = new ImageAdapter(getActivity(), mArrayList);
+            ImageAdapter mImageAdapter = new ImageAdapter(getActivity(), mArrayList);
             gridview.setAdapter(mImageAdapter);
         }
         return root;
@@ -133,17 +127,16 @@ public class MainActivityFragment extends Fragment {
             return mArrayList;
         }
 
-        protected JSONObject getMovieData (String sort) {
+        private JSONObject getMovieData (String sort) {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
             StringBuffer buffer = null;
             try {
                 Resources resources = getActivity().getResources();
                 URL url = new URL(resources.getString(R.string.dbapiurl)
-//                    .concat(resources.getString(R.string.dbapiurl_popularity)
-                    .concat(sort
-                    .concat(resources.getString(R.string.dbapikey_param)
-                    .concat(resources.getString(R.string.dbapikey)))));
+                        .concat(sort)
+                        .concat(resources.getString(R.string.dbapikey_param))
+                        .concat(resources.getString(R.string.dbapikey)));
 
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
@@ -162,9 +155,8 @@ public class MainActivityFragment extends Fragment {
                 if (buffer.length() == 0) {
                     return null;
                 }
-
             } catch (IOException e) {
-                 e.printStackTrace();
+                 Log.e(TAG, "Error managing connection. " , e);
             } finally {
                 if (connection != null) {
                     connection.disconnect();
@@ -173,18 +165,13 @@ public class MainActivityFragment extends Fragment {
                     try {
                         reader.close();
                     } catch (final IOException e) {
-                        Log.e(TAG, "Error closing stream", e);
+                        Log.e(TAG, "Error trying to close the Stream", e);
                     }
                 }
             }
-
-            String movieData = buffer.toString();
-            if (movieData == "") {
-                return null;
-            }
             JSONObject jsonObject = null;
             try {
-                jsonObject = new JSONObject(movieData);
+                jsonObject = new JSONObject(buffer.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -195,7 +182,7 @@ public class MainActivityFragment extends Fragment {
         protected void onPostExecute(ArrayList<MovieDataParcelable> movieDataParcelables) {
             super.onPostExecute(movieDataParcelables);
             GridView gridview = (GridView) getActivity().findViewById(R.id.gridView);
-            mImageAdapter = new ImageAdapter(getActivity(), movieDataParcelables);
+            ImageAdapter mImageAdapter = new ImageAdapter(getActivity(), movieDataParcelables);
             gridview.setAdapter(mImageAdapter);
         }
     }
