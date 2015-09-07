@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+
+import com.example.movies.adapter.ImageAdapter;
+import com.example.movies.util.MyAlertDialogFragment;
+import com.example.movies.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,11 +34,13 @@ import java.util.ArrayList;
 
 public class MainActivityFragment extends Fragment {
 
+    private static final String TAG = MainActivityFragment.class.getSimpleName();
     private static final String MOVIE_KEY = "MOVIES";
     private static final String SORT_KEY = "SORT";
     private ArrayList<MovieDataParcelable> mArrayList;
     private Menu sMenu;
     private SharedPreferences mPreferences;
+    protected String mApiKey = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,6 +110,21 @@ public class MainActivityFragment extends Fragment {
     }
 
     public void loadMovies(String sort) {
+        // Read dbapi.org key
+        try {
+            mApiKey = Util.getProperty("dbapi_key", getActivity());
+            if (mApiKey == null) {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            FragmentManager fm = getFragmentManager();
+            MyAlertDialogFragment dialogFragment = new MyAlertDialogFragment();
+            Bundle args = new Bundle();
+            args.putString(MyAlertDialogFragment.TAG,
+                    getResources().getString(R.string.dbapi_key_not_found));
+            dialogFragment.setArguments(args);
+            dialogFragment.show(fm, MyAlertDialogFragment.TAG);
+        }
         FetchDBMovieTask fetchDBMovieTask = new FetchDBMovieTask();
         fetchDBMovieTask.execute(sort);
     }
@@ -121,7 +143,8 @@ public class MainActivityFragment extends Fragment {
                     MovieDataParcelable movieDataParcelable = new MovieDataParcelable(jsonObject);
                     mArrayList.add(movieDataParcelable);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "Error building JSONObject from remote file.", e);
+                    return null;
                 }
             }
             return mArrayList;
@@ -136,7 +159,7 @@ public class MainActivityFragment extends Fragment {
                 URL url = new URL(resources.getString(R.string.dbapiurl)
                         .concat(sort)
                         .concat(resources.getString(R.string.dbapikey_param))
-                        .concat(resources.getString(R.string.dbapikey)));
+                        .concat(mApiKey));
 
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
