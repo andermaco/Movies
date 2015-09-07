@@ -2,18 +2,27 @@
     <string name="app_name">Movie database</string>
     <string name="action_settings">Settings</string>
 
-
+    <!-- dbapi.org get params -->
     <string name="dbapiurl">http://api.themoviedb.org/3/discover/movie?sort_by=</string>
     <string name="dbapiurl_popularity">popularity.desc</string>
     <string name="dbapiurl_rate">vote_average.desc</string>
     <string name="dbapikey_param">&amp;api_key=</string>
-    <string name="dbapikey">YOUR API KEY HERE!!!</string>
+
     <string name="exception">Upss!!! An exception was found</string>
 
-    <!-- menu_dbmovie_fragment -->
+    <!-- Menu labels -->
     <string name="most_popular">Most popular</string>
     <string name="highest_rated">Highest rated</string>
+
     <string name="desc">desc</string>
     <string name="title_activity_movie_detail">Movie detail</string>
-    <string name="hello_world">Hello world!</string>
+
+    <string name="dbapi_key_not_found">Check the dbapi_key param at src/main/assets/app.properties</string>
+
+    <!-- AlertDialog -->
+    <string name="title">Upsss!!!</string>
+    <string name="ok">OK</string>
+    <string name="alert_dialog_cancel">Cancel</string>
+
+
 </resources>
