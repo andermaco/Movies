@@ -52,7 +52,7 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
-        if (savedInstanceState != null)  {
+        if (savedInstanceState != null) {
             mArrayList = (ArrayList<MovieDataParcelable>) savedInstanceState.get(MOVIE_KEY);
             GridView gridview = (GridView) root.findViewById(R.id.gridView);
             ImageAdapter mImageAdapter = new ImageAdapter(getActivity(), mArrayList);
@@ -102,7 +102,7 @@ public class MainActivityFragment extends Fragment {
         }
     }
 
-    public void loadMovies (String sort) {
+    public void loadMovies(String sort) {
         FetchDBMovieTask fetchDBMovieTask = new FetchDBMovieTask();
         fetchDBMovieTask.execute(sort);
     }
@@ -115,7 +115,7 @@ public class MainActivityFragment extends Fragment {
             Log.i(TAG, "doInBackground");
             mArrayList = new ArrayList<MovieDataParcelable>();
             JSONArray json_array = getMovieData(strings[0]).optJSONArray("results");
-            for (int i=0; i<json_array.length(); i++) {
+            for (int i = 0; i < json_array.length(); i++) {
                 try {
                     JSONObject jsonObject = json_array.getJSONObject(i);
                     MovieDataParcelable movieDataParcelable = new MovieDataParcelable(jsonObject);
@@ -127,7 +127,7 @@ public class MainActivityFragment extends Fragment {
             return mArrayList;
         }
 
-        private JSONObject getMovieData (String sort) {
+        private JSONObject getMovieData(String sort) {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
             StringBuffer buffer = null;
@@ -156,7 +156,7 @@ public class MainActivityFragment extends Fragment {
                     return null;
                 }
             } catch (IOException e) {
-                 Log.e(TAG, "Error managing connection. " , e);
+                Log.e(TAG, "Error managing connection. ", e);
             } finally {
                 if (connection != null) {
                     connection.disconnect();
@@ -173,7 +173,7 @@ public class MainActivityFragment extends Fragment {
             try {
                 jsonObject = new JSONObject(buffer.toString());
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, "Error building JSONObject. ", e);
             }
             return jsonObject;
         }
