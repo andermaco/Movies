@@ -1,8 +1,10 @@
 package com.example.movies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -16,34 +18,31 @@ import java.util.ArrayList;
 public class ImageAdapter extends BaseAdapter {
 
     private static final String TAG = ImageAdapter.class.getSimpleName();
+    private Context mContext;
+    private ArrayList<MovieDataParcelable> mMovieDataParcel;
+    private LayoutInflater mLayoutInflater;
+    public ImageAdapter(Context context) {
+        this.mContext = context;
+        this.mLayoutInflater = LayoutInflater.from(context);
+    }
+
+    public ImageAdapter(Context context, ArrayList<MovieDataParcelable> imageUrls) {
+        this.mContext = context;
+        this.mMovieDataParcel = imageUrls;
+        this.mLayoutInflater = LayoutInflater.from(context);
+    }
 
     public void setContext(Context context) {
         this.mContext = context;
     }
 
-    private Context mContext;
-    private ArrayList<MovieDataParcelable> mImageUrls;
-    private LayoutInflater mLayoutInflater;
-
-    public ImageAdapter (Context context) {
-        this.mContext = context;
-        this.mLayoutInflater = LayoutInflater.from(context);
-    }
-
-    public ImageAdapter (Context context, ArrayList<MovieDataParcelable> imageUrls) {
-        this.mContext = context;
-        this.mImageUrls = imageUrls;
-        this.mLayoutInflater = LayoutInflater.from(context);
-    }
-
     @Override
     public int getCount() {
-        return mImageUrls.size();
+        return mMovieDataParcel.size();
     }
 
     @Override
     public Object getItem(int i) {
-//        return mImageUrls.get(i);
         return null;
     }
 
@@ -53,7 +52,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
+    public View getView(final int position, View view, ViewGroup viewGroup) {
         ImageView imageView;
         if (view == null) {
             imageView = new ImageView(mContext);
@@ -61,12 +60,22 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) view;
         }
+        // Piccaso will load the image
+        Picasso.with(mContext).load(mMovieDataParcel.get(position).getFullPosterPath()).error(R.drawable.image_placeholder).into(imageView);
+        // Call details activity
+        imageView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, MovieDetailActivity.class);
+                intent.putExtra(MovieDataParcelable.KEY, mMovieDataParcel.get(position));
+                mContext.startActivity(intent);
+            }
+        });
 
-        Picasso.with(mContext).load(mImageUrls.get(position).getFullPosterPath()).error(R.drawable.image_placeholder).into(imageView);;
         return imageView;
     }
 
     public void setImageUrls(ArrayList<MovieDataParcelable> imageUrls) {
-        this.mImageUrls = imageUrls;
+        this.mMovieDataParcel = imageUrls;
     }
 }
