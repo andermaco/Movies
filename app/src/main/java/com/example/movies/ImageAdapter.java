@@ -21,6 +21,7 @@ public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<MovieDataParcelable> mMovieDataParcel;
     private LayoutInflater mLayoutInflater;
+
     public ImageAdapter(Context context) {
         this.mContext = context;
         this.mLayoutInflater = LayoutInflater.from(context);
