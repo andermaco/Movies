@@ -8,12 +8,29 @@ import org.json.JSONObject;
 
 public class MovieDataParcelable implements Parcelable {
 
+    public static final String KEY = "MOVIEDATA";
+    public static final Parcelable.Creator<MovieDataParcelable> CREATOR = new ClassLoaderCreator<MovieDataParcelable>() {
+        @Override
+        public MovieDataParcelable createFromParcel(Parcel parcel, ClassLoader classLoader) {
+            return new MovieDataParcelable(parcel);
+        }
+
+        @Override
+        public MovieDataParcelable createFromParcel(Parcel parcel) {
+            return new MovieDataParcelable(parcel);
+        }
+
+        @Override
+        public MovieDataParcelable[] newArray(int i) {
+            return new MovieDataParcelable[i];
+        }
+    };
+    private static final String IMAGE_SRC = "http://image.tmdb.org/t/p/w500/";
     private String mTitle;
     private String mPoster;
     private String mOverview;
     private String mRelease;
     private String mRating;
-    private static final String IMAGE_SRC = "http://image.tmdb.org/t/p/w500/";
 
     protected MovieDataParcelable(Parcel in) {
         mTitle = in.readString();
@@ -36,23 +53,6 @@ public class MovieDataParcelable implements Parcelable {
         return 0;
     }
 
-    public static final Parcelable.Creator<MovieDataParcelable> CREATOR = new ClassLoaderCreator<MovieDataParcelable>() {
-        @Override
-        public MovieDataParcelable createFromParcel(Parcel parcel, ClassLoader classLoader) {
-            return new MovieDataParcelable(parcel);
-        }
-
-        @Override
-        public MovieDataParcelable createFromParcel(Parcel parcel) {
-            return new MovieDataParcelable(parcel);
-        }
-
-        @Override
-        public MovieDataParcelable[] newArray(int i) {
-            return new MovieDataParcelable[i];
-        }
-    };
-
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(mTitle);
@@ -62,47 +62,47 @@ public class MovieDataParcelable implements Parcelable {
         parcel.writeString(mRating);
     }
 
-    public String getFullPosterPath () {
-        return IMAGE_SRC.concat(getmPoster());
+    public String getFullPosterPath() {
+        return IMAGE_SRC.concat(getPoster());
     }
 
-    public String getmTitle() {
+    public String getTitle() {
         return mTitle;
     }
 
-    public String getmPoster() {
-        return mPoster;
-    }
-
-    public String getmOverview() {
-        return mOverview;
-    }
-
-    public String getmRelease() {
-        return mRelease;
-    }
-
-    public String getmRating() {
-        return mRating;
-    }
-
-    public void setmTitle(String mTitle) {
+    public void setTitle(String mTitle) {
         this.mTitle = mTitle;
     }
 
-    public void setmPoster(String mPoster) {
+    public String getPoster() {
+        return mPoster;
+    }
+
+    public void setPoster(String mPoster) {
         this.mPoster = mPoster;
     }
 
-    public void setmOverview(String mOverview) {
+    public String getOverview() {
+        return mOverview;
+    }
+
+    public void setOverview(String mOverview) {
         this.mOverview = mOverview;
     }
 
-    public void setmRelease(String mRelease) {
+    public String getRelease() {
+        return mRelease;
+    }
+
+    public void setRelease(String mRelease) {
         this.mRelease = mRelease;
     }
 
-    public void setmRating(String mRating) {
+    public String getRating() {
+        return mRating;
+    }
+
+    public void setRating(String mRating) {
         this.mRating = mRating;
     }
 }
