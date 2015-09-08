@@ -19,6 +19,9 @@
 
     <string name="dbapi_key_not_found">Check the dbapi_key param at src/main/assets/app.properties</string>
 
+    <string name="dbapi_wrong_params">
+        Check the dbapi_key params at src/main/assets/app.properties</string>
+
     <!-- AlertDialog -->
     <string name="title">Upsss!!!</string>
     <string name="ok">OK</string>
