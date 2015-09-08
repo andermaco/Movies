@@ -1,7 +1,10 @@
 package com.example.movies;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -17,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.example.movies.adapter.ImageAdapter;
+import com.example.movies.exception.MovieException;
 import com.example.movies.util.MyAlertDialogFragment;
 import com.example.movies.util.Util;
 
@@ -29,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -37,10 +42,10 @@ public class MainActivityFragment extends Fragment {
     private static final String TAG = MainActivityFragment.class.getSimpleName();
     private static final String MOVIE_KEY = "MOVIES";
     private static final String SORT_KEY = "SORT";
+    protected String mApiKey = null;
     private ArrayList<MovieDataParcelable> mArrayList;
     private Menu sMenu;
     private SharedPreferences mPreferences;
-    protected String mApiKey = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,30 +118,49 @@ public class MainActivityFragment extends Fragment {
         // Read dbapi.org key
         try {
             mApiKey = Util.getProperty("dbapi_key", getActivity());
-            if (mApiKey == null) {
+            if (mApiKey == null || mApiKey.equals("")) {
                 throw new Exception();
             }
         } catch (Exception e) {
-            FragmentManager fm = getFragmentManager();
-            MyAlertDialogFragment dialogFragment = new MyAlertDialogFragment();
-            Bundle args = new Bundle();
-            args.putString(MyAlertDialogFragment.TAG,
-                    getResources().getString(R.string.dbapi_key_not_found));
-            dialogFragment.setArguments(args);
-            dialogFragment.show(fm, MyAlertDialogFragment.TAG);
+            showDialog(getResources().getString(R.string.dbapi_wrong_params));
+            return;
         }
         FetchDBMovieTask fetchDBMovieTask = new FetchDBMovieTask();
         fetchDBMovieTask.execute(sort);
     }
 
+    //Based on a stackoverflow snippet
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void showDialog(String message) {
+        FragmentManager fm = getFragmentManager();
+        MyAlertDialogFragment dialogFragment = new MyAlertDialogFragment();
+        Bundle args = new Bundle();
+        args.putString(MyAlertDialogFragment.TAG, message);
+        dialogFragment.setArguments(args);
+        dialogFragment.show(fm, MyAlertDialogFragment.TAG);
+    }
+
     private class FetchDBMovieTask extends AsyncTask<String, Void, ArrayList<MovieDataParcelable>> {
         private final String TAG = FetchDBMovieTask.class.getSimpleName();
+        private MovieException movieException;
 
         @Override
         protected ArrayList<MovieDataParcelable> doInBackground(String... strings) {
             Log.i(TAG, "doInBackground");
             mArrayList = new ArrayList<MovieDataParcelable>();
-            JSONArray json_array = getMovieData(strings[0]).optJSONArray("results");
+            JSONArray json_array = null;
+            try {
+                json_array = getMovieData(strings[0]).optJSONArray("results");
+            } catch (MovieException e) {
+                movieException = e;
+                return null;
+            }
             for (int i = 0; i < json_array.length(); i++) {
                 try {
                     JSONObject jsonObject = json_array.getJSONObject(i);
@@ -150,7 +174,7 @@ public class MainActivityFragment extends Fragment {
             return mArrayList;
         }
 
-        private JSONObject getMovieData(String sort) {
+        private JSONObject getMovieData(String sort) throws MovieException {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
             StringBuffer buffer = null;
@@ -175,11 +199,17 @@ public class MainActivityFragment extends Fragment {
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line + "\n");
                 }
-                if (buffer.length() == 0) {
-                    return null;
+                if (buffer == null || buffer.length() == 0) {
+                    throw new MovieException("Trying to get data from remote tmdb.org. No data was found");
                 }
+            } catch (MalformedURLException e) {
+                throw new MovieException(e.getClass().getSimpleName()
+                        .concat("tmdb.org url was wrong, check your params."));
+            } catch (java.io.FileNotFoundException e) {
+                throw new MovieException(e.getClass().getSimpleName()
+                        .concat(". ").concat(e.getMessage()));
             } catch (IOException e) {
-                Log.e(TAG, "Error managing connection. ", e);
+                throw new MovieException("Check your network settings");
             } finally {
                 if (connection != null) {
                     connection.disconnect();
@@ -197,6 +227,7 @@ public class MainActivityFragment extends Fragment {
                 jsonObject = new JSONObject(buffer.toString());
             } catch (JSONException e) {
                 Log.e(TAG, "Error building JSONObject. ", e);
+                throw new MovieException("Error building JSON data from remote source: tmdb.org");
             }
             return jsonObject;
         }
@@ -204,9 +235,13 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<MovieDataParcelable> movieDataParcelables) {
             super.onPostExecute(movieDataParcelables);
-            GridView gridview = (GridView) getActivity().findViewById(R.id.gridView);
-            ImageAdapter mImageAdapter = new ImageAdapter(getActivity(), movieDataParcelables);
-            gridview.setAdapter(mImageAdapter);
+            if (movieException != null) {
+                MainActivityFragment.this.showDialog(movieException.getMessage());
+            } else {
+                GridView gridview = (GridView) getActivity().findViewById(R.id.gridView);
+                ImageAdapter mImageAdapter = new ImageAdapter(getActivity(), movieDataParcelables);
+                gridview.setAdapter(mImageAdapter);
+            }
         }
     }
 }
