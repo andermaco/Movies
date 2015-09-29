@@ -1,31 +1,30 @@
 <resources>
     <string name="app_name">Movie database</string>
-    <string name="action_settings">Settings</string>
 
     <!-- dbapi.org get params -->
-    <string name="dbapiurl">http://api.themoviedb.org/3/discover/movie?sort_by=</string>
-    <string name="dbapiurl_popularity">popularity.desc</string>
-    <string name="dbapiurl_rate">vote_average.desc</string>
-    <string name="dbapikey_param">&amp;api_key=</string>
-
-    <string name="exception">Upss!!! An exception was found</string>
+    <string name="dbapiurl_discover">http://api.themoviedb.org/3/discover/movie?sort_by=%1$s&amp;api_key=%2$s</string>
+    <string name="dbapiurl_discover_popularity">popularity.desc</string>
+    <string name="dbapiurl_discover_rate">vote_average.desc</string>
+    <string name="dbapiurl_movie">http://api.themoviedb.org/3/movie/%1$s?api_key=%2$s</string>
+    <string name="dbapiurl_trailer">http://api.themoviedb.org/3/movie/%1$s/videos?api_key=%2$s</string>
+    <string name="dbapiurl_review">http://api.themoviedb.org/3/movie/%1$s/reviews?api_key=%2$s</string>
 
     <!-- Menu labels -->
-    <string name="most_popular">Most popular</string>
-    <string name="highest_rated">Highest rated</string>
+    <string name="menu_most_popular">Most popular</string>
+    <string name="menu_highest_rated">Highest rated</string>
+    <string name="menu_favorites">Favorites</string>
 
-    <string name="desc">desc</string>
     <string name="title_activity_movie_detail">Movie detail</string>
-
-    <string name="dbapi_key_not_found">Check the dbapi_key param at src/main/assets/app.properties</string>
-
     <string name="dbapi_wrong_params">
         Check the dbapi_key params at src/main/assets/app.properties</string>
 
     <!-- AlertDialog -->
-    <string name="title">Upsss!!!</string>
     <string name="ok">OK</string>
-    <string name="alert_dialog_cancel">Cancel</string>
-
+    <!-- Detail Activity -->
+    <string name="detail_rating_over">/10</string>
+    <string name="detail_mark_as_favorite">Mark as favorite</string>
+    <string name="detail_trailer_label">Trailers:</string>
+    <string name="detail_review_label">Reviews:</string>
+    <string name="detail_trailer_desc">Resolution: %1$s</string>
 
 </resources>

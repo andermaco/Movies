@@ -2,7 +2,59 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <item name="android:background">#262626</item>
+        <item name="actionBarStyle">@style/menu_action_bar</item>
+    </style>
+    <style name="menu_action_bar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="background">@android:color/white</item>
+    </style>
+
+    <!--Detail Fragment-->
+    <style name="detail_big_text">
+        <item name="android:textSize">@dimen/detail_movie_text_big_size</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="detail_medium_text">
+        <item name="android:textSize">@dimen/detail_movie_text_medium_size</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="detail_half_medium_text">
+        <item name="android:textSize">@dimen/detail_movie_text_half_medium_size</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="detail_small_text">
+        <item name="android:textSize">@dimen/detail_movie_text_small_size</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!--Dialog Fragment-->
+    <style name="dialog_style">
+        <item name="android:windowBackground">@android:color/white</item>
+	    <item name="android:windowTitleStyle">@style/DialogWindowTitle_Holo</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+    </style>
+    <style name="DialogWindowTitle_Holo">
+        <item name="android:maxLines">1</item>
+        <item name="android:scrollHorizontally">false</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Holo.DialogWindowTitle</item>
+    </style>
+
+    <style name="YourDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/background_light</item>
+    </style>
+
+
+    <style name="dialog_half_medium_text">
+        <item name="android:textSize">@dimen/detail_movie_text_half_medium_size</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!--Menu -->
+    <style name="menu_style">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
 </resources>

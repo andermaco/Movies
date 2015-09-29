@@ -2,6 +2,7 @@ package com.example.movies.util;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +15,17 @@ import com.example.movies.R;
 public class MyAlertDialogFragment extends AppCompatDialogFragment {
 
     public static final String TAG = MyAlertDialogFragment.class.getSimpleName();
-    LayoutInflater mInflater;
+
+    public MyAlertDialogFragment() {
+        this.setStyle(DialogFragment.STYLE_NORMAL, R.style.YourDialogStyle);
+    }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mInflater = inflater;
+    public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        LayoutInflater mInflater = inflater;
         View rootView = inflater.inflate(R.layout.fragment_dialog, container, false);
-        getDialog().setTitle("Ups!!!");
+        getDialog().setTitle("Ups!!!")  ;
 
         Bundle mArgs = getArguments();
         String exception = mArgs.getString(TAG);

@@ -1,14 +1,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <item
-        android:id="@+id/most_popular"
-        android:title="@string/most_popular"
+        android:id="@+id/menu_most_popular"
+        android:title="@string/menu_most_popular"
         android:visible="true"
+        app:showAsAction="never"    />
+
+    <item
+        android:id="@+id/menu_highest_rated"
+        android:title="@string/menu_highest_rated"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/highest_rated"
-        android:title="@string/highest_rated"
-        app:showAsAction="never"/>
+        android:id="@+id/menu_favorites"
+        android:title="@string/menu_favorites"
+        android:visible="false"
+        app:showAsAction="never" />
+
 </menu>
